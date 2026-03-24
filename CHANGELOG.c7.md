@@ -2,7 +2,12 @@
 
 ## Unversioned
 
-- Minor: Added "Open 7TV user in browser" and "Open channel in browser" (same as left-click) when right-clicking the profile picture in a usercard (#400)
+- Added Custom Badges.
+- Added Chatty-style custom command functions (`$if`, `$is`, `$replace`, `$replaceRegex`, `$join`, `$lower`, `$upper`, `$trim`, `$len`, `$sub`, `$word`, `$words`, `$charAt`, `$contains`, `$startsWith`, `$endsWith`, `$eq`, `$neq`, `$gt`, `$lt`, `$gte`, `$lte`, `$not`, `$and`, `$or`). These are evaluated after variable substitution in custom commands.
+- Added `$is()` context matcher for use inside `$if()`, supporting `user:`, `chan:`, `status:`, `mystatus:`, `config:`, `re:`, `cs:`, `w:`, `start:`, `end:` prefixes. `config:` checks message flags (e.g. `config:hl`, `config:firstmsg`, `config:b|badgeKey`) and `mystatus:` checks your own role in the channel (b/m/v).
+- Added channel-restricted custom commands: naming a command `/cmdname#channelname` restricts it to only fire in that channel, while still allowing a fallback global command with the same name.
+- Added custom command chaining: if a custom command's output begins with another command trigger, that command is resolved automatically (up to 10 levels deep).
+- Fixed moderator button commands not having access to the clicked message's context (`{user.name}`, `{msg.id}`, `$is(config:...)`, etc.). The message context is now threaded through the full command resolution chain.
 
 ## 7.5.5-beta.1
 
