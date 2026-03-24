@@ -130,8 +130,6 @@ args = parser.parse_args()
 print("> [!WARNING]")
 print(
     "> This is an experimental version that may break. "
-    "If you're looking for the latest stable release, see "
-    f"https://github.com/SevenTV/chatterino7/releases/tag/{get_current_stable()}.\n"
 )
 
 print("### Downloads\n")
