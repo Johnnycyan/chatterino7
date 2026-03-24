@@ -129,7 +129,7 @@ args = parser.parse_args()
 
 print("> [!WARNING]")
 print(
-    "> This is an experimental version that may break. "
+    "> This is an experimental version that may break.\n"
 )
 
 print("### Downloads\n")
