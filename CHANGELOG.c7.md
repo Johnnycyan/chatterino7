@@ -2,7 +2,9 @@
 
 ## Unversioned
 
-## 7.5.5-beta.1-cyan
+- Added Cyan settings page with import/export of Commands, Custom Badges, and Moderation Buttons as a single YAML file. Supports replace or append import modes, and shows an image resolver dialog when imported entries reference image files.
+
+## 7.5.5-beta.1-cyan.1
 
 - Added Custom Badges.
 - Added Chatty-style custom command functions (`$if`, `$is`, `$replace`, `$replaceRegex`, `$join`, `$lower`, `$upper`, `$trim`, `$len`, `$sub`, `$word`, `$words`, `$charAt`, `$contains`, `$startsWith`, `$endsWith`, `$eq`, `$neq`, `$gt`, `$lt`, `$gte`, `$lte`, `$not`, `$and`, `$or`). These are evaluated after variable substitution in custom commands.

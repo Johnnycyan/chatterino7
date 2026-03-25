@@ -36,12 +36,12 @@ void CustomBadgeModel::getRowFromItem(const CustomBadge &item,
 {
     using Column = CustomBadgeModel::Column;
 
-    setStringItem(row[Column::Mode], item.isAddon() ? "Addon" : "Replace", false, false);
-    setStringItem(row[Column::Name], item.name(), false, false);
-    setStringItem(row[Column::TypeVersion], item.typeAndVersion(), false, false);
-    setStringItem(row[Column::Restriction], item.restriction(), false, false);
-    setStringItem(row[Column::Image], item.imageFilePath(), false, false);
-    setStringItem(row[Column::Channel], item.channelName(), false, false);
+    setStringItem(row[Column::Mode], item.isAddon() ? "Addon" : "Replace", false, true);
+    setStringItem(row[Column::Name], item.name(), false, true);
+    setStringItem(row[Column::TypeVersion], item.typeAndVersion(), false, true);
+    setStringItem(row[Column::Restriction], item.restriction(), false, true);
+    setStringItem(row[Column::Image], item.imageFilePath(), false, true);
+    setStringItem(row[Column::Channel], item.channelName(), false, true);
 }
 
 }  // namespace chatterino

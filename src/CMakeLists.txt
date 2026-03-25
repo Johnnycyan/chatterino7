@@ -636,6 +636,8 @@ set(SOURCE_FILES
         util/Helpers.hpp
         util/HttpServer.cpp
         util/HttpServer.hpp
+        util/CyanImportExport.cpp
+        util/CyanImportExport.hpp
         util/ImageUploader.cpp
         util/ImageUploader.hpp
         util/IncognitoBrowser.cpp
@@ -913,6 +915,8 @@ set(SOURCE_FILES
         widgets/settingspages/NicknamesPage.hpp
         widgets/settingspages/CustomBadgesPage.hpp
         widgets/settingspages/CustomBadgesPage.cpp
+        widgets/settingspages/CyanPage.cpp
+        widgets/settingspages/CyanPage.hpp
         widgets/settingspages/NotificationPage.cpp
         widgets/settingspages/NotificationPage.hpp
         widgets/settingspages/PluginsPage.cpp

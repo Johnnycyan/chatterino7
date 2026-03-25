@@ -26,6 +26,7 @@
 #include "widgets/settingspages/NicknamesPage.hpp"
 #include "widgets/settingspages/NotificationPage.hpp"
 #include "widgets/settingspages/CustomBadgesPage.hpp"
+#include "widgets/settingspages/CyanPage.hpp"
 #include "widgets/settingspages/PluginsPage.hpp"
 
 #include <QDialogButtonBox>
@@ -254,6 +255,8 @@ void SettingsDialog::addTabs()
 #ifdef CHATTERINO_HAVE_PLUGINS
     this->addTab([]{return new PluginsPage;},          "Plugins",        ":/settings/plugins.svg");
 #endif
+    this->ui_.tabContainer->addSpacing(16);
+    this->addTab([]{return new CyanPage;},             "Cyan",           ":/buttons/cyan.svg");
     this->ui_.tabContainer->addStretch(1);
     this->addTab([]{return new AboutPage;},            "About",          ":/settings/about.svg", SettingsTabId::About, Qt::AlignBottom);
     // clang-format on
