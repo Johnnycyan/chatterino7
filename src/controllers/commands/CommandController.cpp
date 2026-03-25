@@ -543,8 +543,8 @@ CommandModel *CommandController::createModel(QObject *parent)
     return model;
 }
 
-const Command *CommandController::findCustomCommand(const QString &name,
-                                                     const ChannelPtr &channel) const
+const Command *CommandController::findCustomCommand(
+    const QString &name, const ChannelPtr &channel) const
 {
     // Get current channel name
     QString currentChannelName = channel ? channel->getName() : QString();
@@ -598,8 +598,7 @@ QString CommandController::execCommand(const QString &textNoEmoji,
                 break;
             }
             text = getApp()->getEmotes()->getEmojis()->replaceShortCodes(
-                this->execCustomCommand(words, *cmd, dryRun, channel,
-                                       message));
+                this->execCustomCommand(words, *cmd, dryRun, channel, message));
 
             words = text.split(' ', Qt::SkipEmptyParts);
 

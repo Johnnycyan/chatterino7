@@ -12,7 +12,7 @@ Command::Command(const QString &_text)
     // Parse format: [/]name[#channel] [func]
     int spaceIndex = _text.indexOf(' ');
     QString commandPart = (spaceIndex == -1) ? _text : _text.mid(0, spaceIndex);
-    
+
     // Check for channel restriction in command name
     int channelIndex = commandPart.indexOf('#');
     if (channelIndex != -1)
@@ -36,8 +36,7 @@ Command::Command(const QString &_text)
 }
 
 Command::Command(const QString &_name, const QString &_func,
-                 bool _showInMsgContextMenu,
-                 const QString &_restrictedChannel)
+                 bool _showInMsgContextMenu, const QString &_restrictedChannel)
     : name(_name.trimmed())
     , func(_func.trimmed())
     , showInMsgContextMenu(_showInMsgContextMenu)

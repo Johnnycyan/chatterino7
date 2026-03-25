@@ -2309,7 +2309,7 @@ void ChannelView::mouseMoveEvent(QMouseEvent *event)
                 // we need tooltipScale capped at 0.25 (since 72/0.25 * 0.25 = 72)
                 auto scale = getSettings()->emoteTooltipScale.getEnum();
                 auto tooltipScale = std::min(getTooltipScale(scale), 0.25f);
-                
+
                 this->tooltipWidget_->setOne(TooltipEntry::scaled(
                     showThumbnail
                         ? badgeElement->getEmote()->images.getImage(3.0)
@@ -3189,8 +3189,8 @@ void ChannelView::addCommandExecutionContextMenuItems(
                     {"element.copytext", elementCopyText},
                 });
 
-            value = getApp()->getCommands()->execCommand(
-                value, channel, false, layout->getMessage());
+            value = getApp()->getCommands()->execCommand(value, channel, false,
+                                                         layout->getMessage());
 
             channel->sendMessage(value);
         });
@@ -3366,8 +3366,8 @@ void ChannelView::handleLinkClick(QMouseEvent *event, const Link &link,
                 QStringList(), Command{"(modaction)", value}, true, channel,
                 layout->getMessage());
 
-            value = getApp()->getCommands()->execCommand(
-                value, channel, false, layout->getMessage());
+            value = getApp()->getCommands()->execCommand(value, channel, false,
+                                                         layout->getMessage());
 
             channel->sendMessage(value);
         }

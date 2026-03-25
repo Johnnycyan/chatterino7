@@ -22,8 +22,8 @@ public:
         Name = 1,
         TypeVersion = 2,
         Restriction = 3,
-        Image       = 4,
-        Channel     = 5
+        Image = 4,
+        Channel = 5
     };
 
 protected:

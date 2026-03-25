@@ -126,3 +126,5 @@ aqtinstall.log
 # sccache (CI)
 .sccache
 chatty-master/*
+chatty_highlight_matching.txt
+chatty_functions.txt

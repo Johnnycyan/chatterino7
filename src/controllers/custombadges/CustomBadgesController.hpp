@@ -4,19 +4,18 @@
 
 #pragma once
 
-#include "CustomBadge.hpp"
-#include "controllers/custombadges/CustomBadge.hpp"
-#include "messages/Emote.hpp"
-
 #include "common/SignalVector.hpp"
+#include "controllers/custombadges/CustomBadge.hpp"
+#include "CustomBadge.hpp"
+#include "messages/Emote.hpp"
+#include "providers/twitch/TwitchBadge.hpp"
+
+#include <QString>
 
 #include <map>
 #include <memory>
 #include <optional>
 #include <vector>
-#include <QString>
-
-#include "providers/twitch/TwitchBadge.hpp"
 
 namespace chatterino {
 
@@ -45,8 +44,9 @@ public:
 
 private:
     std::map<QString, EmotePtr> emoteCache_;
-    
-    EmotePtr getOrCreateEmote(const QString &imageFilePath, const QString &badgeName = QString());
+
+    EmotePtr getOrCreateEmote(const QString &imageFilePath,
+                              const QString &badgeName = QString());
 };
 
 }  // namespace chatterino

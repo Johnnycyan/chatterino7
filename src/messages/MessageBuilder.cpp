@@ -3,13 +3,13 @@
 // SPDX-License-Identifier: MIT
 
 #include "messages/MessageBuilder.hpp"
-#include "controllers/custombadges/CustomBadgesController.hpp"
 
 #include "Application.hpp"
 #include "common/LinkParser.hpp"
 #include "common/Literals.hpp"
 #include "common/QLogging.hpp"
 #include "controllers/accounts/AccountController.hpp"
+#include "controllers/custombadges/CustomBadgesController.hpp"
 #include "controllers/emotes/EmoteController.hpp"
 #include "controllers/highlights/HighlightController.hpp"
 #include "controllers/highlights/HighlightResult.hpp"
@@ -393,8 +393,9 @@ void appendBadges(MessageBuilder *builder,
         for (auto &addonEmote : getApp()->getCustomBadges()->getAddonBadges(
                  badges, twitchChannel->getName()))
         {
-            builder->emplace<CustomBadgeElement>(addonEmote,
-                                           MessageElementFlag::BadgeVanity)
+            builder
+                ->emplace<CustomBadgeElement>(addonEmote,
+                                              MessageElementFlag::BadgeVanity)
                 ->setTooltip(addonEmote->tooltip.string);
         }
     }

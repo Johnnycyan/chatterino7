@@ -16,7 +16,6 @@
 
 #include <QCheckBox>
 #include <QDialog>
-#include <algorithm>
 #include <QDialogButtonBox>
 #include <QFile>
 #include <QFileDialog>
@@ -34,6 +33,8 @@
 #include <QUrl>
 #include <QVBoxLayout>
 
+#include <algorithm>
+
 namespace chatterino {
 
 // ---------------------------------------------------------------------------
@@ -46,10 +47,10 @@ namespace chatterino {
 namespace {
 
 struct ImageEntry {
-    QString originalBasename;   ///< filename as stored in the YAML
-    QString category;           ///< "Custom Badges" or "Moderation Buttons"
-    QString label;              ///< "Image" or "Icon"
-    QLineEdit *pathEdit{};      ///< filled in by the dialog
+    QString originalBasename;  ///< filename as stored in the YAML
+    QString category;          ///< "Custom Badges" or "Moderation Buttons"
+    QString label;             ///< "Image" or "Icon"
+    QLineEdit *pathEdit{};     ///< filled in by the dialog
 };
 
 /**
@@ -62,11 +63,10 @@ struct ImageEntry {
  * @param outButtonMap  Receives original basename → resolved path for buttons.
  * @return true if the user accepted, false if cancelled.
  */
-bool runImageResolverDialog(
-    QWidget *parent, const QStringList &badgeImages,
-    const QStringList &buttonIcons,
-    QMap<QString, QString> &outBadgeMap,
-    QMap<QString, QString> &outButtonMap)
+bool runImageResolverDialog(QWidget *parent, const QStringList &badgeImages,
+                            const QStringList &buttonIcons,
+                            QMap<QString, QString> &outBadgeMap,
+                            QMap<QString, QString> &outButtonMap)
 {
     QDialog dialog(parent);
     dialog.setWindowTitle("Resolve Image Files");
@@ -101,18 +101,17 @@ bool runImageResolverDialog(
             rowLayout->addWidget(edit);
             rowLayout->addWidget(browseBtn);
 
-            QObject::connect(browseBtn, &QPushButton::clicked,
-                             [&dialog, edit, basename] {
-                                 const QString path = QFileDialog::getOpenFileName(
-                                     &dialog, "Select image for " + basename,
-                                     QString(),
-                                     "Images (*.png *.jpg *.jpeg *.gif *.webp "
-                                     "*.svg *.bmp);;All files (*)");
-                                 if (!path.isEmpty())
-                                 {
-                                     edit->setText(path);
-                                 }
-                             });
+            QObject::connect(
+                browseBtn, &QPushButton::clicked, [&dialog, edit, basename] {
+                    const QString path = QFileDialog::getOpenFileName(
+                        &dialog, "Select image for " + basename, QString(),
+                        "Images (*.png *.jpg *.jpeg *.gif *.webp "
+                        "*.svg *.bmp);;All files (*)");
+                    if (!path.isEmpty())
+                    {
+                        edit->setText(path);
+                    }
+                });
 
             badgesLayout->addRow("Image: " + basename, rowWidget);
 
@@ -142,18 +141,17 @@ bool runImageResolverDialog(
             rowLayout->addWidget(edit);
             rowLayout->addWidget(browseBtn);
 
-            QObject::connect(browseBtn, &QPushButton::clicked,
-                             [&dialog, edit, basename] {
-                                 const QString path = QFileDialog::getOpenFileName(
-                                     &dialog, "Select icon for " + basename,
-                                     QString(),
-                                     "Images (*.png *.jpg *.jpeg *.gif *.webp "
-                                     "*.svg *.bmp *.ico);;All files (*)");
-                                 if (!path.isEmpty())
-                                 {
-                                     edit->setText(path);
-                                 }
-                             });
+            QObject::connect(
+                browseBtn, &QPushButton::clicked, [&dialog, edit, basename] {
+                    const QString path = QFileDialog::getOpenFileName(
+                        &dialog, "Select icon for " + basename, QString(),
+                        "Images (*.png *.jpg *.jpeg *.gif *.webp "
+                        "*.svg *.bmp *.ico);;All files (*)");
+                    if (!path.isEmpty())
+                    {
+                        edit->setText(path);
+                    }
+                });
 
             btnsLayout->addRow("Icon: " + basename, rowWidget);
 
@@ -163,39 +161,36 @@ bool runImageResolverDialog(
         outerLayout->addWidget(btnsGroup);
     }
 
-    auto *buttonBox =
-        new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
-                             &dialog);
-    QObject::connect(buttonBox, &QDialogButtonBox::accepted, &dialog,
-                     [&dialog, &entries] {
-                         // Validate every entry has a non-empty, existing file path
-                         for (const auto &entry : entries)
-                         {
-                             const QString path =
-                                 entry.pathEdit->text().trimmed();
-                             if (path.isEmpty())
-                             {
-                                 QMessageBox::warning(
-                                     &dialog, "Missing Image",
-                                     QString("Please browse and select a file "
-                                             "for: %1")
-                                         .arg(entry.originalBasename));
-                                 entry.pathEdit->setFocus();
-                                 return;
-                             }
-                             if (!QFileInfo::exists(path))
-                             {
-                                 QMessageBox::warning(
-                                     &dialog, "File Not Found",
-                                     QString("The selected file does not "
-                                             "exist:\n%1")
-                                         .arg(path));
-                                 entry.pathEdit->setFocus();
-                                 return;
-                             }
-                         }
-                         dialog.accept();
-                     });
+    auto *buttonBox = new QDialogButtonBox(
+        QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
+    QObject::connect(
+        buttonBox, &QDialogButtonBox::accepted, &dialog, [&dialog, &entries] {
+            // Validate every entry has a non-empty, existing file path
+            for (const auto &entry : entries)
+            {
+                const QString path = entry.pathEdit->text().trimmed();
+                if (path.isEmpty())
+                {
+                    QMessageBox::warning(
+                        &dialog, "Missing Image",
+                        QString("Please browse and select a file "
+                                "for: %1")
+                            .arg(entry.originalBasename));
+                    entry.pathEdit->setFocus();
+                    return;
+                }
+                if (!QFileInfo::exists(path))
+                {
+                    QMessageBox::warning(&dialog, "File Not Found",
+                                         QString("The selected file does not "
+                                                 "exist:\n%1")
+                                             .arg(path));
+                    entry.pathEdit->setFocus();
+                    return;
+                }
+            }
+            dialog.accept();
+        });
     QObject::connect(buttonBox, &QDialogButtonBox::rejected, &dialog,
                      &QDialog::reject);
     outerLayout->addWidget(buttonBox);
@@ -268,16 +263,15 @@ int filterDuplicates(cyan::ImportExportData &data)
 
     {
         auto existing = getApp()->getCommands()->items.readOnly();
-        auto it = std::remove_if(
-            data.commands.begin(), data.commands.end(),
-            [&existing](const Command &cmd) {
-                return std::any_of(existing->begin(), existing->end(),
-                                   [&cmd](const Command &e) {
-                                       return e.name == cmd.name;
-                                   });
-            });
-        skipped += static_cast<int>(
-            std::distance(it, data.commands.end()));
+        auto it = std::remove_if(data.commands.begin(), data.commands.end(),
+                                 [&existing](const Command &cmd) {
+                                     return std::any_of(
+                                         existing->begin(), existing->end(),
+                                         [&cmd](const Command &e) {
+                                             return e.name == cmd.name;
+                                         });
+                                 });
+        skipped += static_cast<int>(std::distance(it, data.commands.end()));
         data.commands.erase(it, data.commands.end());
     }
 
@@ -295,8 +289,7 @@ int filterDuplicates(cyan::ImportExportData &data)
                                e.restriction() == badge.restriction();
                     });
             });
-        skipped += static_cast<int>(
-            std::distance(it, data.customBadges.end()));
+        skipped += static_cast<int>(std::distance(it, data.customBadges.end()));
         data.customBadges.erase(it, data.customBadges.end());
     }
 
@@ -305,14 +298,13 @@ int filterDuplicates(cyan::ImportExportData &data)
         auto it = std::remove_if(
             data.moderationButtons.begin(), data.moderationButtons.end(),
             [&existing](const ModerationAction &btn) {
-                return std::any_of(
-                    existing->begin(), existing->end(),
-                    [&btn](const ModerationAction &e) {
-                        return e.getAction() == btn.getAction();
-                    });
+                return std::any_of(existing->begin(), existing->end(),
+                                   [&btn](const ModerationAction &e) {
+                                       return e.getAction() == btn.getAction();
+                                   });
             });
-        skipped += static_cast<int>(
-            std::distance(it, data.moderationButtons.end()));
+        skipped +=
+            static_cast<int>(std::distance(it, data.moderationButtons.end()));
         data.moderationButtons.erase(it, data.moderationButtons.end());
     }
 
@@ -386,8 +378,9 @@ CyanPage::CyanPage()
         auto *exportGroup = new QGroupBox("Export", this);
         auto *exportLayout = new QVBoxLayout(exportGroup);
 
-        auto *exportDesc = new QLabel(
-            "Select which settings to include in the exported file:", exportGroup);
+        auto *exportDesc =
+            new QLabel("Select which settings to include in the exported file:",
+                       exportGroup);
         exportDesc->setWordWrap(true);
         exportLayout->addWidget(exportDesc);
 
@@ -401,7 +394,8 @@ CyanPage::CyanPage()
         exportLayout->addWidget(cbBadges);
         exportLayout->addWidget(cbButtons);
 
-        auto *exportBtn = new QPushButton("Export to YAML file...", exportGroup);
+        auto *exportBtn =
+            new QPushButton("Export to YAML file...", exportGroup);
         exportLayout->addWidget(exportBtn);
 
         QObject::connect(exportBtn, &QPushButton::clicked, this,
@@ -425,18 +419,18 @@ CyanPage::CyanPage()
             new QLabel("How to handle existing settings:", importGroup);
         importLayout->addWidget(modeLabel);
 
-        auto *rbReplace =
-            new QRadioButton("Replace — clear existing entries first", importGroup);
-        auto *rbAppend =
-            new QRadioButton("Append — add imported entries to existing ones",
-                             importGroup);
+        auto *rbReplace = new QRadioButton(
+            "Replace — clear existing entries first", importGroup);
+        auto *rbAppend = new QRadioButton(
+            "Append — add imported entries to existing ones", importGroup);
         rbAppend->setChecked(true);
         importLayout->addWidget(rbReplace);
         importLayout->addWidget(rbAppend);
 
         layout->addSpacing(4);
 
-        auto *importBtn = new QPushButton("Import from YAML file...", importGroup);
+        auto *importBtn =
+            new QPushButton("Import from YAML file...", importGroup);
         importLayout->addWidget(importBtn);
 
         QObject::connect(importBtn, &QPushButton::clicked, this,
@@ -452,9 +446,9 @@ CyanPage::CyanPage()
 
 bool CyanPage::filterElements(const QString &query)
 {
-    return query.isEmpty() ||
-           QString("cyan import export commands custom badges moderation buttons yaml")
-               .contains(query, Qt::CaseInsensitive);
+    return query.isEmpty() || QString("cyan import export commands custom "
+                                      "badges moderation buttons yaml")
+                                  .contains(query, Qt::CaseInsensitive);
 }
 
 void CyanPage::doExport(bool includeCommands, bool includeBadges,
@@ -585,8 +579,7 @@ void CyanPage::doImport(bool replace)
         // Apply resolved paths into the data
         for (auto &badge : data.customBadges)
         {
-            const QString bn =
-                QFileInfo(badge.imageFilePath()).fileName();
+            const QString bn = QFileInfo(badge.imageFilePath()).fileName();
             if (!bn.isEmpty() && badgeMap.contains(bn))
             {
                 badge = CustomBadge(badge.badgeType(), badge.badgeVersion(),
@@ -604,8 +597,8 @@ void CyanPage::doImport(bool replace)
             const QString bn = QFileInfo(path2).fileName();
             if (!bn.isEmpty() && buttonMap.contains(bn))
             {
-                btn = ModerationAction(btn.getAction(),
-                                       QUrl::fromLocalFile(buttonMap.value(bn)));
+                btn = ModerationAction(
+                    btn.getAction(), QUrl::fromLocalFile(buttonMap.value(bn)));
             }
         }
     }
@@ -614,9 +607,11 @@ void CyanPage::doImport(bool replace)
     if (replace)
     {
         const int totalExisting =
-            static_cast<int>(getApp()->getCommands()->items.readOnly()->size()) +
+            static_cast<int>(
+                getApp()->getCommands()->items.readOnly()->size()) +
             static_cast<int>(getSettings()->customBadges.readOnly()->size()) +
-            static_cast<int>(getSettings()->moderationActions.readOnly()->size());
+            static_cast<int>(
+                getSettings()->moderationActions.readOnly()->size());
 
         if (totalExisting > 0)
         {
@@ -635,13 +630,11 @@ void CyanPage::doImport(bool replace)
     const auto applyResult = applyImport(data, replace);
 
     const int totalSkipped = preSkipped + applyResult.skipped;
-    QString msg =
-        QString("Imported %1 item(s).")
-            .arg(applyResult.imported);
+    QString msg = QString("Imported %1 item(s).").arg(applyResult.imported);
     if (totalSkipped > 0)
     {
-        msg += QString("\n%1 duplicate item(s) were skipped.")
-                   .arg(totalSkipped);
+        msg +=
+            QString("\n%1 duplicate item(s) were skipped.").arg(totalSkipped);
     }
 
     QMessageBox::information(this, "Import Successful", msg);

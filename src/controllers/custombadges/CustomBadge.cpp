@@ -27,8 +27,7 @@ bool CustomBadge::operator==(const CustomBadge &other) const
            this->channelName_ == other.channelName_ &&
            this->restriction_ == other.restriction_ &&
            this->imageFilePath_ == other.imageFilePath_ &&
-           this->isAddon_ == other.isAddon_ &&
-           this->name_ == other.name_;
+           this->isAddon_ == other.isAddon_ && this->name_ == other.name_;
 }
 
 bool CustomBadge::operator!=(const CustomBadge &other) const

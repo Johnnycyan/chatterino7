@@ -92,9 +92,8 @@ bool TooltipEntryWidget::refreshPixmap()
 
     if (!this->customSize.isEmpty())
     {
-        this->displayImage_->setPixmap(
-            pixmap->scaled(this->customSize, Qt::KeepAspectRatio,
-                           Qt::SmoothTransformation));
+        this->displayImage_->setPixmap(pixmap->scaled(
+            this->customSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
         if (this->displayImage_->pixmap().size() != this->customSize)
         {

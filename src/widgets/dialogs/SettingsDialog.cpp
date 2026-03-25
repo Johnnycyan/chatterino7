@@ -16,6 +16,8 @@
 #include "widgets/settingspages/AboutPage.hpp"
 #include "widgets/settingspages/AccountsPage.hpp"
 #include "widgets/settingspages/CommandPage.hpp"
+#include "widgets/settingspages/CustomBadgesPage.hpp"
+#include "widgets/settingspages/CyanPage.hpp"
 #include "widgets/settingspages/ExternalToolsPage.hpp"
 #include "widgets/settingspages/FiltersPage.hpp"
 #include "widgets/settingspages/GeneralPage.hpp"
@@ -25,8 +27,6 @@
 #include "widgets/settingspages/ModerationPage.hpp"
 #include "widgets/settingspages/NicknamesPage.hpp"
 #include "widgets/settingspages/NotificationPage.hpp"
-#include "widgets/settingspages/CustomBadgesPage.hpp"
-#include "widgets/settingspages/CyanPage.hpp"
 #include "widgets/settingspages/PluginsPage.hpp"
 
 #include <QDialogButtonBox>

@@ -255,8 +255,7 @@ bool evaluateMatcher(const QString &value, const QString &matcher,
                 bool found = false;
                 for (const TwitchBadge &badge : message->twitchBadges)
                 {
-                    if (badge.key_.compare(badgeKey, Qt::CaseInsensitive) ==
-                        0)
+                    if (badge.key_.compare(badgeKey, Qt::CaseInsensitive) == 0)
                     {
                         if (badgeVersion.isEmpty() ||
                             badge.value_.compare(badgeVersion,
@@ -277,8 +276,8 @@ bool evaluateMatcher(const QString &value, const QString &matcher,
             // config:live[|title/game regex]  — stream must be live
             if (opt.startsWith(QStringLiteral("live"), Qt::CaseInsensitive))
             {
-                const bool negate =
-                    opt.startsWith(QStringLiteral("!live"), Qt::CaseInsensitive);
+                const bool negate = opt.startsWith(QStringLiteral("!live"),
+                                                   Qt::CaseInsensitive);
                 const QString optName = negate ? opt.mid(5) : opt.mid(4);
                 auto *tc = dynamic_cast<TwitchChannel *>(channel.get());
                 if (tc == nullptr)
@@ -412,7 +411,8 @@ bool isContextMatcher(const QString &matcher)
     return matcher.startsWith(QStringLiteral("user:"), Qt::CaseInsensitive) ||
            matcher.startsWith(QStringLiteral("chan:"), Qt::CaseInsensitive) ||
            matcher.startsWith(QStringLiteral("status:"), Qt::CaseInsensitive) ||
-           matcher.startsWith(QStringLiteral("mystatus:"), Qt::CaseInsensitive) ||
+           matcher.startsWith(QStringLiteral("mystatus:"),
+                              Qt::CaseInsensitive) ||
            matcher.startsWith(QStringLiteral("config:"), Qt::CaseInsensitive);
 }
 
@@ -507,7 +507,9 @@ std::optional<QString> callFunction(const QString &funcName,
         }
         if (start < 0)
         {
-            start = static_cast<int>(std::max(qsizetype{0}, static_cast<qsizetype>(args[0].length()) + start));
+            start = static_cast<int>(
+                std::max(qsizetype{0},
+                         static_cast<qsizetype>(args[0].length()) + start));
         }
         if (args.size() >= 3)
         {
@@ -558,7 +560,8 @@ std::optional<QString> callFunction(const QString &funcName,
             const int toArg = args[2].toInt(&ok2) - 1;
             if (ok2)
             {
-                to = static_cast<int>(std::min(static_cast<qsizetype>(toArg), ws.size() - 1));
+                to = static_cast<int>(
+                    std::min(static_cast<qsizetype>(toArg), ws.size() - 1));
             }
         }
         if (from > to)

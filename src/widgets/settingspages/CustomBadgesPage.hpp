@@ -20,7 +20,7 @@ public:
 
 private:
     EditableModelView *view_{};
-    
+
     void showEditDialog(const CustomBadge *badge, int row);
 };
 

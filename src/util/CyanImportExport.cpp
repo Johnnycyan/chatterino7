@@ -34,11 +34,10 @@ QString yamlQuote(const QString &value)
     bool needsQuoting = false;
     for (const QChar ch : value)
     {
-        if (ch == ':' || ch == '#' || ch == '"' || ch == '\'' ||
-            ch == '\\' || ch == '\n' || ch == '\r' || ch == '\t' ||
-            ch == '{' || ch == '}' || ch == '[' || ch == ']' ||
-            ch == '&' || ch == '*' || ch == '!' || ch == '|' ||
-            ch == '>' || ch == '%' || ch == '@' || ch == '`')
+        if (ch == ':' || ch == '#' || ch == '"' || ch == '\'' || ch == '\\' ||
+            ch == '\n' || ch == '\r' || ch == '\t' || ch == '{' || ch == '}' ||
+            ch == '[' || ch == ']' || ch == '&' || ch == '*' || ch == '!' ||
+            ch == '|' || ch == '>' || ch == '%' || ch == '@' || ch == '`')
         {
             needsQuoting = true;
             break;
@@ -93,8 +92,7 @@ QString baseName(const QString &pathOrUrl)
 QString yamlUnquote(const QString &raw)
 {
     QString trimmed = raw.trimmed();
-    if (trimmed.startsWith('"') && trimmed.endsWith('"') &&
-        trimmed.size() >= 2)
+    if (trimmed.startsWith('"') && trimmed.endsWith('"') && trimmed.size() >= 2)
     {
         // Remove surrounding quotes and unescape
         QString inner = trimmed.mid(1, trimmed.size() - 2);
@@ -118,8 +116,8 @@ QString yamlUnquote(const QString &raw)
 
 bool yamlToBool(const QString &raw)
 {
-    return raw.trimmed().compare(QStringLiteral("true"),
-                                 Qt::CaseInsensitive) == 0;
+    return raw.trimmed().compare(QStringLiteral("true"), Qt::CaseInsensitive) ==
+           0;
 }
 
 // ---------------------------------------------------------------------------
@@ -196,7 +194,8 @@ QMap<QString, SectionItems> parseSections(const QString &yaml, QString *error)
         // List item line: starts with optional spaces then "- "
         // We accept 1–4 leading spaces before the dash.
         const int dashPos = line.indexOf(QLatin1String("- "));
-        if (dashPos >= 0 && dashPos <= 3 && line.left(dashPos).trimmed().isEmpty())
+        if (dashPos >= 0 && dashPos <= 3 &&
+            line.left(dashPos).trimmed().isEmpty())
         {
             flushItem();
             hasItem = true;
@@ -235,8 +234,7 @@ QMap<QString, SectionItems> parseSections(const QString &yaml, QString *error)
         }
 
         const QString key = trimmed.left(colonPos).trimmed();
-        const QString val =
-            yamlUnquote(trimmed.mid(colonPos + 1).trimmed());
+        const QString val = yamlUnquote(trimmed.mid(colonPos + 1).trimmed());
         currentItem[key] = val;
     }
 
@@ -377,8 +375,7 @@ ImportExportData importFromYaml(const QString &yaml, QString *error)
         }
 
         result.customBadges.emplace_back(
-            badgeType, badgeVersion,
-            fields.value(QStringLiteral("channel")),
+            badgeType, badgeVersion, fields.value(QStringLiteral("channel")),
             fields.value(QStringLiteral("restriction")),
             fields.value(QStringLiteral("image")), isAddon,
             fields.value(QStringLiteral("name")));

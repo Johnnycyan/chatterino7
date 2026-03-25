@@ -118,7 +118,8 @@ struct Deserialize<chatterino::CustomBadge> {
         {
             PAJLADA_REPORT_ERROR(error)
             return chatterino::CustomBadge(QString(), QString(), QString(),
-                                           QString(), QString(), false, QString());
+                                           QString(), QString(), false,
+                                           QString());
         }
 
         QString _badgeType;
@@ -138,7 +139,8 @@ struct Deserialize<chatterino::CustomBadge> {
         chatterino::rj::getSafe(value, "name", _name);
 
         return chatterino::CustomBadge(_badgeType, _badgeVersion, _channelName,
-                                       _restriction, _imageFilePath, _isAddon, _name);
+                                       _restriction, _imageFilePath, _isAddon,
+                                       _name);
     }
 };
 

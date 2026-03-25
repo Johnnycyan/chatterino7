@@ -43,7 +43,8 @@ struct Serialize<chatterino::Command> {
         chatterino::rj::set(ret, "func", value.func, a);
         chatterino::rj::set(ret, "showInMsgContextMenu",
                             value.showInMsgContextMenu, a);
-        chatterino::rj::set(ret, "restrictedChannel", value.restrictedChannel, a);
+        chatterino::rj::set(ret, "restrictedChannel", value.restrictedChannel,
+                            a);
 
         return ret;
     }
