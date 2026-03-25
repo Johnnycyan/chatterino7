@@ -2,6 +2,10 @@
 
 ## Unversioned
 
+- Added "Custom IRC Server" section to the Cyan settings page to override the Twitch IRC host, port, and SSL setting; applies immediately via "Apply and Reconnect" without restarting the client.
+
+## 7.5.5-beta.1-cyan.2
+
 - Added Cyan settings page with import/export of Commands, Custom Badges, and Moderation Buttons as a single YAML file. Supports replace or append import modes, and shows an image resolver dialog when imported entries reference image files.
 
 ## 7.5.5-beta.1-cyan.1

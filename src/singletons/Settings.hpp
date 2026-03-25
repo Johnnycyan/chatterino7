@@ -902,6 +902,13 @@ public:
 
     BoolSetting xChatterino7NoHttp2{"/x-chatterino7/no-http2", false};
 
+    // Cyan — custom IRC server overrides
+    // When customIrcHost is non-empty, these values override the defaults from
+    // Env (i.e. CHATTERINO2_TWITCH_SERVER_HOST / _PORT / _SECURE).
+    QStringSetting customIrcHost{"/cyan/customIrcHost", ""};
+    IntSetting customIrcPort{"/cyan/customIrcPort", 0};
+    BoolSetting customIrcSecure{"/cyan/customIrcSecure", true};
+
 private:
     ChatterinoSetting<std::vector<HighlightPhrase>> highlightedMessagesSetting =
         {"/highlighting/highlights"};

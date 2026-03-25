@@ -10,6 +10,7 @@
 #include "controllers/custombadges/CustomBadge.hpp"
 #include "controllers/custombadges/CustomBadgesController.hpp"
 #include "controllers/moderationactions/ModerationAction.hpp"
+#include "providers/twitch/TwitchIrcServer.hpp"
 #include "singletons/Settings.hpp"
 #include "util/CyanImportExport.hpp"
 #include "util/LayoutCreator.hpp"
@@ -29,6 +30,7 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QScrollArea>
+#include <QSpinBox>
 #include <QTextStream>
 #include <QUrl>
 #include <QVBoxLayout>
@@ -373,6 +375,62 @@ CyanPage::CyanPage()
 
     layout->addSpacing(8);
 
+    // ---- Custom IRC Server group ----
+    {
+        auto *ircGroup = new QGroupBox("Custom IRC Server", this);
+        auto *ircLayout = new QVBoxLayout(ircGroup);
+
+        auto *ircDesc = new QLabel(
+            "Override the Twitch IRC server used for chat connections. "
+            "Leave Host empty to use the default "
+            "(<tt>irc.chat.twitch.tv</tt>). "
+            "Changes take effect after clicking <b>Apply and Reconnect</b>.",
+            ircGroup);
+        ircDesc->setWordWrap(true);
+        ircLayout->addWidget(ircDesc);
+
+        auto *formWidget = new QWidget(ircGroup);
+        auto *formLayout = new QFormLayout(formWidget);
+        formLayout->setContentsMargins(0, 4, 0, 0);
+
+        // Host
+        auto *hostEdit = new QLineEdit(formWidget);
+        hostEdit->setPlaceholderText("irc.chat.twitch.tv");
+        hostEdit->setText(getSettings()->customIrcHost.getValue());
+        formLayout->addRow("Host:", hostEdit);
+
+        // Port
+        auto *portSpin = new QSpinBox(formWidget);
+        portSpin->setRange(0, 65535);
+        portSpin->setSpecialValueText("Default (443)");
+        portSpin->setValue(getSettings()->customIrcPort.getValue());
+        formLayout->addRow("Port:", portSpin);
+
+        // SSL
+        auto *sslCheck = new QCheckBox("Use SSL/TLS", formWidget);
+        sslCheck->setChecked(getSettings()->customIrcSecure.getValue());
+        formLayout->addRow("", sslCheck);
+
+        ircLayout->addWidget(formWidget);
+
+        auto *reconnectBtn = new QPushButton("Apply and Reconnect", ircGroup);
+        ircLayout->addWidget(reconnectBtn);
+
+        QObject::connect(
+            reconnectBtn, &QPushButton::clicked, this,
+            [hostEdit, portSpin, sslCheck] {
+                getSettings()->customIrcHost.setValue(
+                    hostEdit->text().trimmed());
+                getSettings()->customIrcPort.setValue(portSpin->value());
+                getSettings()->customIrcSecure.setValue(sslCheck->isChecked());
+                getApp()->getTwitch()->connect();
+            });
+
+        layout->addWidget(ircGroup);
+    }
+
+    layout->addSpacing(8);
+
     // ---- Export group ----
     {
         auto *exportGroup = new QGroupBox("Export", this);
@@ -447,7 +505,8 @@ CyanPage::CyanPage()
 bool CyanPage::filterElements(const QString &query)
 {
     return query.isEmpty() || QString("cyan import export commands custom "
-                                      "badges moderation buttons yaml")
+                                      "badges moderation buttons yaml "
+                                      "irc server host port ssl reconnect")
                                   .contains(query, Qt::CaseInsensitive);
 }
 

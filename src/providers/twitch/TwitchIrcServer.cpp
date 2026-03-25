@@ -335,9 +335,24 @@ void TwitchIrcServer::initializeConnection(IrcConnection *connection,
     // https://dev.twitch.tv/docs/irc#connecting-to-the-twitch-irc-server
     // SSL disabled: irc://irc.chat.twitch.tv:6667 (or port 80)
     // SSL enabled: irc://irc.chat.twitch.tv:6697 (or port 443)
-    connection->setHost(Env::get().twitchServerHost);
-    connection->setPort(Env::get().twitchServerPort);
-    connection->setSecure(Env::get().twitchServerSecure);
+    {
+        const QString customHost = getSettings()->customIrcHost.getValue();
+        if (customHost.isEmpty())
+        {
+            connection->setHost(Env::get().twitchServerHost);
+            connection->setPort(Env::get().twitchServerPort);
+            connection->setSecure(Env::get().twitchServerSecure);
+        }
+        else
+        {
+            connection->setHost(customHost);
+            const int customPort = getSettings()->customIrcPort.getValue();
+            connection->setPort(customPort > 0
+                                    ? static_cast<uint16_t>(customPort)
+                                    : Env::get().twitchServerPort);
+            connection->setSecure(getSettings()->customIrcSecure.getValue());
+        }
+    }
 
     connection->open();
 }
