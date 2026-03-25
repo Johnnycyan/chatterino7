@@ -2,6 +2,8 @@
 
 ## Unversioned
 
+## 7.5.5-beta.1-cyan
+
 - Added Custom Badges.
 - Added Chatty-style custom command functions (`$if`, `$is`, `$replace`, `$replaceRegex`, `$join`, `$lower`, `$upper`, `$trim`, `$len`, `$sub`, `$word`, `$words`, `$charAt`, `$contains`, `$startsWith`, `$endsWith`, `$eq`, `$neq`, `$gt`, `$lt`, `$gte`, `$lte`, `$not`, `$and`, `$or`). These are evaluated after variable substitution in custom commands.
 - Added `$is()` context matcher for use inside `$if()`, supporting `user:`, `chan:`, `status:`, `mystatus:`, `config:`, `re:`, `cs:`, `w:`, `start:`, `end:` prefixes. `config:` checks message flags (e.g. `config:hl`, `config:firstmsg`, `config:b|badgeKey`) and `mystatus:` checks your own role in the channel (b/m/v).
