@@ -24,7 +24,8 @@ public:
     bool filterElements(const QString &query) override;
 
 private:
-    void doExport(bool includeCommands, bool includeBadges, bool includeButtons);
+    void doExport(bool includeCommands, bool includeBadges,
+                  bool includeButtons);
     void doImport(bool replace);
 };
 
