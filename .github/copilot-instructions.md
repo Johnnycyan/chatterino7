@@ -14,6 +14,7 @@ nmake
 ```
 
 Key CMake flags:
+
 - `-DBUILD_TESTS=ON` — enable tests (off by default)
 - `-DBUILD_BENCHMARKS=ON` — enable benchmarks
 - `-DCHATTERINO_PLUGINS=ON` — enable Lua plugin support
@@ -21,6 +22,7 @@ Key CMake flags:
 - `-DCHATTERINO_NO_AVIF_PLUGIN=ON` — if static `libavif` is unavailable
 
 **Run tests:**
+
 ```cmd
 ctest --repeat until-pass:4 --output-on-failure
 ```
@@ -66,18 +68,18 @@ resources/      # App resources (icons, themes, etc.)
 
 ### Key Third-Party Libraries
 
-| Library | Purpose |
-|---------|---------|
-| `lib/signals/` | Pajlada typed signal/slot system (used instead of Qt signals in most places) |
-| `lib/settings/` | Pajlada settings serialization |
-| `lib/sol2/` + `lib/lua/` | Lua 5.4 plugin engine |
-| `lib/libcommuni/` | Qt IRC protocol library |
-| `lib/qtkeychain/` | Secure credential storage |
-| `lib/twitch-eventsub-ws/` | Twitch EventSub WebSocket |
-| `lib/googletest/` | Test framework |
-| `lib/rapidjson/` | JSON parsing |
-| `lib/miniaudio/` | Audio playback |
-| `lib/WinToast/` | Windows toast notifications |
+| Library                   | Purpose                                                                      |
+| ------------------------- | ---------------------------------------------------------------------------- |
+| `lib/signals/`            | Pajlada typed signal/slot system (used instead of Qt signals in most places) |
+| `lib/settings/`           | Pajlada settings serialization                                               |
+| `lib/sol2/` + `lib/lua/`  | Lua 5.4 plugin engine                                                        |
+| `lib/libcommuni/`         | Qt IRC protocol library                                                      |
+| `lib/qtkeychain/`         | Secure credential storage                                                    |
+| `lib/twitch-eventsub-ws/` | Twitch EventSub WebSocket                                                    |
+| `lib/googletest/`         | Test framework                                                               |
+| `lib/rapidjson/`          | JSON parsing                                                                 |
+| `lib/miniaudio/`          | Audio playback                                                               |
+| `lib/WinToast/`           | Windows toast notifications                                                  |
 
 ## Code Conventions
 
@@ -101,6 +103,7 @@ Auto-formatted by [`clang-format`](.clang-format) (Google-based style, 4-space i
 Static analysis: `clang-tidy` (see CI workflow [`.github/workflows/clang-tidy.yml`](workflows/clang-tidy.yml)).
 
 Run the formatting check locally:
+
 ```cmd
 clang-format --dry-run --Werror src/**/*.cpp src/**/*.hpp
 ```

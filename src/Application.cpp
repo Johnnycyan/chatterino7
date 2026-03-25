@@ -11,6 +11,7 @@
 #include "controllers/accounts/AccountController.hpp"
 #include "controllers/commands/Command.hpp"
 #include "controllers/commands/CommandController.hpp"
+#include "controllers/custombadges/CustomBadgesController.hpp"
 #include "controllers/highlights/HighlightController.hpp"
 #include "controllers/hotkeys/HotkeyController.hpp"
 #include "controllers/ignores/IgnoreController.hpp"
@@ -23,13 +24,13 @@
 #include "providers/kick/KickChatServer.hpp"
 #include "providers/links/LinkResolver.hpp"
 #include "providers/pronouns/Pronouns.hpp"
-#include "controllers/custombadges/CustomBadgesController.hpp"
 #include "providers/seventv/SeventvAPI.hpp"
 #include "providers/seventv/SeventvEmotes.hpp"
 #include "providers/twitch/eventsub/Controller.hpp"
 #include "providers/twitch/TwitchBadges.hpp"
 #include "singletons/ImageUploader.hpp"
 #include "singletons/NativeMessaging.hpp"
+
 #ifdef CHATTERINO_HAVE_PLUGINS
 #    include "controllers/plugins/PluginController.hpp"
 #endif
