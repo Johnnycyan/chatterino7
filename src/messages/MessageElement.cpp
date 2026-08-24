@@ -797,14 +797,6 @@ std::string_view CustomBadgeElement::type() const
     return std::remove_pointer_t<decltype(this)>::TYPE;
 }
 
-std::unique_ptr<MessageElement> FfzBadgeElement::clone() const
-{
-    auto elem = std::make_unique<FfzBadgeElement>(
-        this->getEmote(), this->getFlags(), this->color);
-    elem->cloneFrom(*this);
-    return elem;
-}
-
 // TEXT
 TextElement::TextElement(const QString &text, MessageElementFlags flags,
                          const MessageColor &color, FontStyle style)
