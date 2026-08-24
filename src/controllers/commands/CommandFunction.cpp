@@ -334,7 +334,6 @@ bool evaluateMatcher(const QString &value, const QString &matcher,
                 {"historic", MessageFlag::RecentMessage},
                 {"firstmsg", MessageFlag::FirstMessage},
                 {"restricted", MessageFlag::RestrictedMessage},
-                {"hypechat", MessageFlag::ElevatedMessage},
                 {"shared", MessageFlag::SharedMessage},
             };
 
