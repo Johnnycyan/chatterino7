@@ -500,6 +500,12 @@ jobs:
           } >> "$GITHUB_OUTPUT"
         shell: bash
 
+      - name: Update nightly-build tag
+        run: |
+          git tag -f nightly-build
+          git push -f origin nightly-build
+        shell: bash
+
       - name: Create release
         uses: ncipollo/release-action@v1.21.0
         with:
@@ -511,18 +517,3 @@ jobs:
           prerelease: true
           name: Nightly Release
           tag: nightly-build
-
-      - name: Update nightly-build tag
-        run: |
-          git tag -f nightly-build
-          git push -f origin nightly-build
-        shell: bash
-
-  collect:
-    needs: [build, build-ubuntu-docker]
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - run: jq --exit-status 'all(.result == "success")' <<< '${{ toJson(needs) }}'
-      - name: Done
-        run: exit 0

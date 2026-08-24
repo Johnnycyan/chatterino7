@@ -144,6 +144,8 @@ set(SOURCE_FILES
         controllers/commands/CommandController.hpp
         controllers/commands/Command.cpp
         controllers/commands/Command.hpp
+        controllers/commands/CommandFunction.cpp
+        controllers/commands/CommandFunction.hpp
         controllers/commands/CommandModel.cpp
         controllers/commands/CommandModel.hpp
 

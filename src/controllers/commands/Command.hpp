@@ -15,11 +15,15 @@ struct Command {
     QString name;
     QString func;
     bool showInMsgContextMenu{};
+    /// Empty string means command works in all channels.
+    /// Non-empty string restricts the command to that channel.
+    QString restrictedChannel;
 
     Command() = default;
     explicit Command(const QString &text);
     Command(const QString &name, const QString &func,
-            bool showInMsgContextMenu = false);
+            bool showInMsgContextMenu = false,
+            const QString &restrictedChannel = QString());
 
     QString toString() const;
 };
@@ -39,6 +43,7 @@ struct Serialize<chatterino::Command> {
         chatterino::rj::set(ret, "func", value.func, a);
         chatterino::rj::set(ret, "showInMsgContextMenu",
                             value.showInMsgContextMenu, a);
+        chatterino::rj::set(ret, "restrictedChannel", value.restrictedChannel, a);
 
         return ret;
     }
@@ -76,6 +81,9 @@ struct Deserialize<chatterino::Command> {
 
             return command;
         }
+        // restrictedChannel is optional (for backward compatibility)
+        chatterino::rj::getSafe(value, "restrictedChannel",
+                                command.restrictedChannel);
 
         return command;
     }

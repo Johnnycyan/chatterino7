@@ -38,6 +38,7 @@
 #include "controllers/commands/builtin/twitch/Warn.hpp"
 #include "controllers/commands/Command.hpp"
 #include "controllers/commands/CommandContext.hpp"
+#include "controllers/commands/CommandFunction.hpp"
 #include "controllers/commands/CommandModel.hpp"
 #include "controllers/emotes/EmoteController.hpp"
 #include "controllers/plugins/PluginController.hpp"
@@ -542,8 +543,36 @@ CommandModel *CommandController::createModel(QObject *parent)
     return model;
 }
 
+const Command *CommandController::findCustomCommand(const QString &name,
+                                                     const ChannelPtr &channel) const
+{
+    // Get current channel name
+    QString currentChannelName = channel ? channel->getName() : QString();
+
+    // First pass: look for a command restricted to this channel
+    for (const auto &cmd : this->items)
+    {
+        if (cmd.name == name && cmd.restrictedChannel == currentChannelName)
+        {
+            return &cmd;
+        }
+    }
+
+    // Second pass: look for an unrestricted command with this name
+    for (const auto &cmd : this->items)
+    {
+        if (cmd.name == name && cmd.restrictedChannel.isEmpty())
+        {
+            return &cmd;
+        }
+    }
+
+    return nullptr;
+}
+
 QString CommandController::execCommand(const QString &textNoEmoji,
-                                       ChannelPtr channel, bool dryRun)
+                                       ChannelPtr channel, bool dryRun,
+                                       const Message *message)
 {
     QString text =
         getApp()->getEmotes()->getEmojis()->replaceShortCodes(textNoEmoji);
@@ -557,12 +586,20 @@ QString CommandController::execCommand(const QString &textNoEmoji,
     QString commandName = words[0];
 
     {
-        // check if user command exists
-        const auto it = this->userCommands_.find(commandName);
-        if (it != this->userCommands_.end())
+        // check if user command exists; allow chaining up to MAX_DEPTH levels
+        // so that one custom command can invoke another custom command by
+        // producing output that starts with a command trigger.
+        static constexpr int MAX_CUSTOM_COMMAND_CHAIN = 10;
+        for (int depth = 0; depth < MAX_CUSTOM_COMMAND_CHAIN; ++depth)
         {
+            const Command *cmd = this->findCustomCommand(commandName, channel);
+            if (cmd == nullptr)
+            {
+                break;
+            }
             text = getApp()->getEmotes()->getEmojis()->replaceShortCodes(
-                this->execCustomCommand(words, it.value(), dryRun, channel));
+                this->execCustomCommand(words, *cmd, dryRun, channel,
+                                       message));
 
             words = text.split(' ', Qt::SkipEmptyParts);
 
@@ -607,10 +644,10 @@ QString CommandController::execCommand(const QString &textNoEmoji,
     {
         commandName += ' ' + words[i + 1];
 
-        const auto it = this->userCommands_.find(commandName);
-        if (it != this->userCommands_.end())
+        const Command *cmd = this->findCustomCommand(commandName, channel);
+        if (cmd != nullptr)
         {
-            return this->execCustomCommand(words, it.value(), dryRun, channel);
+            return this->execCustomCommand(words, *cmd, dryRun, channel);
         }
     }
 
@@ -755,7 +792,12 @@ QString CommandController::execCustomCommand(
         result = result.mid(1);
     }
 
-    return result.replace("{{", "{");
+    result = result.replace("{{", "{");
+
+    // Evaluate Chatty-style $func(...) expressions after variable substitution
+    result = commands::evaluateFunctions(result, channel, message, words);
+
+    return result;
 }
 
 QStringList CommandController::getDefaultChatterinoCommandList()

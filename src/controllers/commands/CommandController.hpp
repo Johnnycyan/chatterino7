@@ -33,7 +33,8 @@ public:
     SignalVector<Command> items;
 
     QString execCommand(const QString &text, std::shared_ptr<Channel> channel,
-                        bool dryRun);
+                        bool dryRun,
+                        const Message *message = nullptr);
     QStringList getDefaultChatterinoCommandList();
 
     CommandController(const Paths &paths);
@@ -64,6 +65,13 @@ public:
 
 private:
     void load(Paths &paths);
+
+    /// Finds a custom command by name, considering channel restrictions.
+    /// First tries to find a command restricted to the current channel,
+    /// then falls back to unrestricted commands with the same name.
+    /// Returns nullptr if no matching command is found.
+    const Command *findCustomCommand(const QString &name,
+                                      const ChannelPtr &channel) const;
 
     using CommandFunction =
         std::function<QString(QStringList /*words*/, ChannelPtr /*channel*/)>;
