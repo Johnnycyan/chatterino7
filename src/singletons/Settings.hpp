@@ -12,6 +12,7 @@
 #include "common/StreamerModeSetting.hpp"
 #include "common/ThumbnailPreviewMode.hpp"
 #include "common/TimeoutStackStyle.hpp"
+#include "controllers/custombadges/CustomBadge.hpp"
 #include "controllers/filters/FilterRecord.hpp"
 #include "controllers/highlights/HighlightBadge.hpp"
 #include "controllers/highlights/HighlightBlacklistUser.hpp"
@@ -296,6 +297,7 @@ public:
     void setClampedOverlayScale(float value);
 
     // Badges
+    BoolSetting customBadgesEnabled = {"/customBadges/enabled", true};
     BoolSetting showBadgesGlobalAuthority = {
         "/appearance/badges/GlobalAuthority", true};
     BoolSetting showBadgesPredictions = {"/appearance/badges/predictions",
@@ -920,6 +922,8 @@ private:
         {"/moderation/actions"};
     ChatterinoSetting<std::vector<ChannelLog>> loggedChannelsSetting = {
         "/logging/channels"};
+    ChatterinoSetting<std::vector<CustomBadge>> customBadgesSetting = {
+        "/customBadges/badges"};
     SignalVector<QString> mutedChannels;
 
     IntSetting settingsVersion = {
@@ -939,6 +943,7 @@ public:
     SignalVector<Nickname> nicknames;
     SignalVector<ModerationAction> moderationActions;
     SignalVector<ChannelLog> loggedChannels;
+    SignalVector<CustomBadge> customBadges;
 
     bool isHighlightedUser(const QString &username);
     bool isBlacklistedUser(const QString &username);

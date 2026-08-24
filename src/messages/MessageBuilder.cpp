@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include "messages/MessageBuilder.hpp"
+#include "controllers/custombadges/CustomBadgesController.hpp"
 
 #include "Application.hpp"
 #include "common/LinkParser.hpp"
@@ -252,6 +253,15 @@ QString stylizeUsername(const QString &username, const Message &message)
 std::optional<EmotePtr> getTwitchBadge(const TwitchBadge &badge,
                                        const TwitchChannel *twitchChannel)
 {
+    if (getApp()->getCustomBadges()->isEnabled())
+    {
+        if (auto customBadge = getApp()->getCustomBadges()->getCustomBadgeEmote(
+                badge, twitchChannel->getName()))
+        {
+            return customBadge;
+        }
+    }
+
     if (auto channelBadge =
             twitchChannel->twitchBadge(badge.key_, badge.value_))
     {
@@ -284,6 +294,18 @@ void appendBadges(MessageBuilder *builder,
         {
             continue;
         }
+
+        // Check if this is a custom replacement badge
+        bool isCustomReplacement = false;
+        if (getApp()->getCustomBadges()->isEnabled())
+        {
+            if (getApp()->getCustomBadges()->getCustomBadgeEmote(
+                    badge, twitchChannel->getName()))
+            {
+                isCustomReplacement = true;
+            }
+        }
+
         auto tooltip = (*badgeEmote)->tooltip.string;
 
         if (badge.key_ == "bits")
@@ -350,12 +372,32 @@ void appendBadges(MessageBuilder *builder,
             }
         }
 
-        builder->emplace<BadgeElement>(*badgeEmote, badge.flag_)
-            ->setTooltip(tooltip);
+        // Use CustomBadgeElement for custom replacement badges to ensure proper scaling
+        if (isCustomReplacement)
+        {
+            builder->emplace<CustomBadgeElement>(*badgeEmote, badge.flag_)
+                ->setTooltip(tooltip);
+        }
+        else
+        {
+            builder->emplace<BadgeElement>(*badgeEmote, badge.flag_)
+                ->setTooltip(tooltip);
+        }
     }
 
     builder->message().twitchBadges = badges;
     builder->message().twitchBadgeInfos = badgeInfos;
+
+    if (getApp()->getCustomBadges()->isEnabled())
+    {
+        for (auto &addonEmote : getApp()->getCustomBadges()->getAddonBadges(
+                 badges, twitchChannel->getName()))
+        {
+            builder->emplace<CustomBadgeElement>(addonEmote,
+                                           MessageElementFlag::BadgeVanity)
+                ->setTooltip(addonEmote->tooltip.string);
+        }
+    }
 }
 
 std::vector<TwitchBadge> appendSharedChatBadges(

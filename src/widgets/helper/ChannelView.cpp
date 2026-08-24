@@ -2304,12 +2304,17 @@ void ChannelView::mouseMoveEvent(QMouseEvent *event)
             }
             else if (badgeElement)
             {
+                // For badges, cap the tooltip image at 72px max
+                // The 4x image is 72x72 with scale factor 0.25, so to keep it at 72px
+                // we need tooltipScale capped at 0.25 (since 72/0.25 * 0.25 = 72)
                 auto scale = getSettings()->emoteTooltipScale.getEnum();
+                auto tooltipScale = std::min(getTooltipScale(scale), 0.25f);
+                
                 this->tooltipWidget_->setOne(TooltipEntry::scaled(
                     showThumbnail
                         ? badgeElement->getEmote()->images.getImage(3.0)
                         : nullptr,
-                    element->getTooltip(), getTooltipScale(scale)));
+                    element->getTooltip(), tooltipScale));
             }
         }
         else if (auto *linkElement = dynamic_cast<LinkElement *>(element))

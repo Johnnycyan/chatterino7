@@ -25,6 +25,7 @@
 #include "widgets/settingspages/ModerationPage.hpp"
 #include "widgets/settingspages/NicknamesPage.hpp"
 #include "widgets/settingspages/NotificationPage.hpp"
+#include "widgets/settingspages/CustomBadgesPage.hpp"
 #include "widgets/settingspages/PluginsPage.hpp"
 
 #include <QDialogButtonBox>
@@ -244,6 +245,7 @@ void SettingsDialog::addTabs()
     this->addTab([]{return new HighlightingPage;},     "Highlights",     ":/settings/notifications.svg", SettingsTabId::Highlights);
     this->addTab([]{return new IgnoresPage;},          "Ignores",        ":/settings/ignore.svg");
     this->addTab([]{return new FiltersPage;},          "Filters",        ":/settings/filters.svg");
+    this->addTab([]{return new CustomBadgesPage;},     "Custom Badges",  ":/settings/badges.svg");
     this->ui_.tabContainer->addSpacing(16);
     this->addTab([]{return new KeyboardSettingsPage;}, "Hotkeys",        ":/settings/keybinds.svg");
     this->addTab([]{return new ModerationPage;},       "Moderation",     ":/settings/moderation.svg", SettingsTabId::Moderation);

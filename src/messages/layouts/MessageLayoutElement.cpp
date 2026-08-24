@@ -173,6 +173,7 @@ void ImageLayoutElement::paint(QPainter &painter,
     if (pixmap && !this->image_->animated())
     {
         // fourtf: make it use qreal values
+        painter.setRenderHint(QPainter::SmoothPixmapTransform);
         painter.drawPixmap(QRectF(this->getRect()), *pixmap, QRectF());
     }
 }

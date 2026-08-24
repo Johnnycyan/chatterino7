@@ -667,6 +667,27 @@ protected:
     const QColor color;
 };
 
+// Custom badge element that scales based on DPI (18px @ 1x, 36px @ 2x, 72px @ 4x)
+class CustomBadgeElement : public BadgeElement
+{
+public:
+    static constexpr std::string_view TYPE = "custom-badge";
+
+    CustomBadgeElement(const EmotePtr &data, MessageElementFlags flags_);
+
+    void addToContainer(MessageLayoutContainer &container,
+                        const MessageLayoutContext &ctx) override;
+
+    std::unique_ptr<MessageElement> clone() const override;
+
+    QJsonObject toJson() const override;
+    std::string_view type() const override;
+
+protected:
+    MessageLayoutElement *makeImageLayoutElement(const ImagePtr &image,
+                                                 QSizeF size) override;
+};
+
 // contains a text, formated depending on the preferences
 class TimestampElement : public MessageElement
 {

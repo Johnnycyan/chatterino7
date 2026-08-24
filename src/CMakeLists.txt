@@ -166,10 +166,17 @@ set(SOURCE_FILES
         controllers/completion/strategies/CommandStrategy.cpp
         controllers/completion/strategies/CommandStrategy.hpp
         controllers/completion/strategies/SmartEmoteStrategy.cpp
-        controllers/completion/strategies/SmartEmoteStrategy.cpp
+        controllers/completion/strategies/SmartEmoteStrategy.hpp
         controllers/completion/strategies/Strategy.hpp
         controllers/completion/TabCompletionModel.cpp
         controllers/completion/TabCompletionModel.hpp
+
+        controllers/custombadges/CustomBadgesController.cpp
+        controllers/custombadges/CustomBadge.cpp
+        controllers/custombadges/CustomBadge.hpp
+        controllers/custombadges/CustomBadgeModel.cpp
+        controllers/custombadges/CustomBadgeModel.hpp
+        controllers/custombadges/CustomBadgesController.hpp
 
         controllers/emotes/EmoteController.cpp
         controllers/emotes/EmoteController.hpp
@@ -902,6 +909,8 @@ set(SOURCE_FILES
         widgets/settingspages/ModerationPage.hpp
         widgets/settingspages/NicknamesPage.cpp
         widgets/settingspages/NicknamesPage.hpp
+        widgets/settingspages/CustomBadgesPage.hpp
+        widgets/settingspages/CustomBadgesPage.cpp
         widgets/settingspages/NotificationPage.cpp
         widgets/settingspages/NotificationPage.hpp
         widgets/settingspages/PluginsPage.cpp

@@ -743,6 +743,122 @@ std::unique_ptr<MessageElement> FfzBadgeElement::clone() const
     return elem;
 }
 
+// CUSTOM BADGE
+CustomBadgeElement::CustomBadgeElement(const EmotePtr &data,
+                                       MessageElementFlags flags_)
+    : BadgeElement(data, flags_)
+{
+}
+
+void CustomBadgeElement::addToContainer(MessageLayoutContainer &container,
+                                        const MessageLayoutContext &ctx)
+{
+    if (ctx.flags.hasAny(this->getFlags()))
+    {
+        auto image =
+            this->emote_->images.getImageOrLoaded(container.getImageScale());
+        if (image->isEmpty())
+        {
+            return;
+        }
+
+        // Custom badges render at fixed 18px base size, scaled by DPI
+        // 1x DPI: 18px, 2x DPI: 36px, 4x DPI: 72px
+        QSizeF fixedBaseSize(18.0, 18.0);
+        QSizeF scaledSize = fixedBaseSize * container.getScale();
+        container.addElement(this->makeImageLayoutElement(image, scaledSize));
+    }
+}
+
+MessageLayoutElement *CustomBadgeElement::makeImageLayoutElement(
+    const ImagePtr &image, QSizeF size)
+{
+    auto *element = new ImageLayoutElement(*this, image, size);
+    return element;
+}
+
+std::unique_ptr<MessageElement> CustomBadgeElement::clone() const
+{
+    auto el =
+        std::make_unique<CustomBadgeElement>(this->emote_, this->getFlags());
+    el->cloneFrom(*this);
+    return el;
+}
+
+QJsonObject CustomBadgeElement::toJson() const
+{
+    auto base = BadgeElement::toJson();
+    base["type"_L1] = u"CustomBadgeElement"_s;
+    return base;
+}
+
+std::string_view CustomBadgeElement::type() const
+{
+    return std::remove_pointer_t<decltype(this)>::TYPE;
+}
+
+// CUSTOM BADGE
+CustomBadgeElement::CustomBadgeElement(const EmotePtr &data,
+                                       MessageElementFlags flags_)
+    : BadgeElement(data, flags_)
+{
+}
+
+void CustomBadgeElement::addToContainer(MessageLayoutContainer &container,
+                                        const MessageLayoutContext &ctx)
+{
+    if (ctx.flags.hasAny(this->getFlags()))
+    {
+        auto image =
+            this->emote_->images.getImageOrLoaded(container.getImageScale());
+        if (image->isEmpty())
+        {
+            return;
+        }
+
+        // Custom badges render at fixed 18px base size, scaled by DPI
+        // 1x DPI: 18px, 2x DPI: 36px, 4x DPI: 72px
+        QSizeF fixedBaseSize(18.0, 18.0);
+        QSizeF scaledSize = fixedBaseSize * container.getScale();
+        container.addElement(this->makeImageLayoutElement(image, scaledSize));
+    }
+}
+
+MessageLayoutElement *CustomBadgeElement::makeImageLayoutElement(
+    const ImagePtr &image, QSizeF size)
+{
+    auto *element = new ImageLayoutElement(*this, image, size);
+    return element;
+}
+
+std::unique_ptr<MessageElement> CustomBadgeElement::clone() const
+{
+    auto el =
+        std::make_unique<CustomBadgeElement>(this->emote_, this->getFlags());
+    el->cloneFrom(*this);
+    return el;
+}
+
+QJsonObject CustomBadgeElement::toJson() const
+{
+    auto base = BadgeElement::toJson();
+    base["type"_L1] = u"CustomBadgeElement"_s;
+    return base;
+}
+
+std::string_view CustomBadgeElement::type() const
+{
+    return std::remove_pointer_t<decltype(this)>::TYPE;
+}
+
+std::unique_ptr<MessageElement> FfzBadgeElement::clone() const
+{
+    auto elem = std::make_unique<FfzBadgeElement>(
+        this->getEmote(), this->getFlags(), this->color);
+    elem->cloneFrom(*this);
+    return elem;
+}
+
 // TEXT
 TextElement::TextElement(const QString &text, MessageElementFlags flags,
                          const MessageColor &color, FontStyle style)

@@ -67,6 +67,7 @@ namespace eventsub {
 class IController;
 }  // namespace eventsub
 class SpellChecker;
+class CustomBadgesController;
 
 class KickChatServer;
 
@@ -128,6 +129,7 @@ public:
     virtual eventsub::IController *getEventSub() = 0;
     virtual SpellChecker *getSpellChecker() = 0;
     virtual KickChatServer *getKickChatServer() = 0;
+    virtual CustomBadgesController *getCustomBadges() = 0;
 };
 
 class Application : public IApplication
@@ -202,6 +204,7 @@ private:
     std::unique_ptr<pronouns::Pronouns> pronouns;
     std::unique_ptr<SpellChecker> spellChecker;
     std::unique_ptr<KickChatServer> kickChatServer;
+    std::unique_ptr<CustomBadgesController> customBadges;
 #ifdef CHATTERINO_HAVE_PLUGINS
     std::unique_ptr<PluginController> plugins;
 #endif
@@ -260,6 +263,7 @@ public:
     ITwitchUsers *getTwitchUsers() override;
     SpellChecker *getSpellChecker() override;
     KickChatServer *getKickChatServer() override;
+    CustomBadgesController *getCustomBadges() override;
 
 private:
     void initNm(const Modes &modes, const Paths &paths);

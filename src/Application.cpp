@@ -23,6 +23,7 @@
 #include "providers/kick/KickChatServer.hpp"
 #include "providers/links/LinkResolver.hpp"
 #include "providers/pronouns/Pronouns.hpp"
+#include "controllers/custombadges/CustomBadgesController.hpp"
 #include "providers/seventv/SeventvAPI.hpp"
 #include "providers/seventv/SeventvEmotes.hpp"
 #include "providers/twitch/eventsub/Controller.hpp"
@@ -201,6 +202,7 @@ Application::Application(Settings &_settings, const Paths &paths,
     , pronouns(new pronouns::Pronouns)
     , spellChecker(new SpellChecker)
     , kickChatServer(new KickChatServer)
+    , customBadges(new CustomBadgesController)
 #ifdef CHATTERINO_HAVE_PLUGINS
     , plugins(new PluginController(paths))
 #endif
@@ -252,6 +254,8 @@ void Application::initialize(Settings &settings, const Modes &modes,
     this->bttvEmotes->loadEmotes();
     this->ffzEmotes->loadEmotes();
     this->seventvEmotes->loadGlobalEmotes();
+
+    this->customBadges->initialize();
 
     this->twitch->initialize();
     this->kickChatServer->initialize();
@@ -632,6 +636,14 @@ KickChatServer *Application::getKickChatServer()
     return this->kickChatServer.get();
 }
 
+CustomBadgesController *Application::getCustomBadges()
+{
+    assertInGuiThread();
+    assert(this->customBadges);
+
+    return this->customBadges.get();
+}
+
 void Application::aboutToQuit()
 {
     ABOUT_TO_QUIT.store(true);
@@ -658,6 +670,7 @@ void Application::stop()
     this->seventvEventAPI.reset();
     this->seventvEmotes.reset();
     this->ffzEmotes.reset();
+    this->customBadges.reset();
     this->bttvLiveUpdates.reset();
     this->bttvEmotes.reset();
     this->chatterinoBadges.reset();
