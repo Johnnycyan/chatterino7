@@ -160,9 +160,11 @@ IApplication::~IApplication()
 // to each other
 
 Application::Application(Settings &_settings, const Paths &paths,
-                         const Args &_args, Updates &_updates)
+                         const Args &_args, const Modes &modes,
+                         Updates &_updates)
     : paths_(paths)
     , args_(_args)
+    , modes_(modes)
     , themes(new Theme(paths))
     , fonts(new Fonts(_settings))
     , logging(new Logging(_settings))
@@ -218,8 +220,7 @@ Application::~Application()
     INSTANCE = nullptr;
 }
 
-void Application::initialize(Settings &settings, const Modes &modes,
-                             const Paths &paths)
+void Application::initialize(Settings &settings, const Paths &paths)
 {
     assert(!this->initialized);
 
@@ -299,7 +300,7 @@ void Application::initialize(Settings &settings, const Modes &modes,
 
     if (!this->args_.isFramelessEmbed)
     {
-        this->initNm(modes, paths);
+        this->initNm(this->modes_, paths);
     }
 
     this->twitch->initEventAPIs(this->bttvLiveUpdates.get(),

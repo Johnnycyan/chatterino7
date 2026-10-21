@@ -44,6 +44,11 @@ public:
         return this->args_;
     }
 
+    const Modes &getModes() override
+    {
+        return this->modes_;
+    }
+
     Theme *getThemes() override
     {
         assert(
@@ -121,6 +126,13 @@ public:
     HighlightController *getHighlights() override
     {
         assert(false && "EmptyApplication::getHighlights was called without "
+                        "being initialized");
+        return nullptr;
+    }
+
+    CustomBadgesController *getCustomBadges() override
+    {
+        assert(false && "EmptyApplication::getCustomBadges was called without "
                         "being initialized");
         return nullptr;
     }

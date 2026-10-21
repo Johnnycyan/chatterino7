@@ -7,7 +7,9 @@
 #include "common/Aliases.hpp"
 #include "common/Outcome.hpp"
 #include "messages/MessageColor.hpp"
+#include "messages/MessageElement.hpp"
 #include "messages/MessageFlag.hpp"
+#include "messages/MessageParseArgs.hpp"
 
 #include <IrcMessage>
 #include <IrcTagsRef>
@@ -37,10 +39,11 @@ class TwitchChannel;
 class ChannelChatters;
 class MessageThread;
 class IgnorePhrase;
+struct HelixMinimalUser;
 struct HelixVip;
 using HelixModerator = HelixVip;
 struct ChannelPointReward;
-struct TwitchEmoteOccurrence;
+struct TwitchSpecialOccurrence;
 struct HelixPinnedChatMessage;
 
 namespace linkparser {
@@ -78,17 +81,6 @@ const ImageUploaderResultTag imageUploaderResultMessage{};
 MessagePtr makeSystemMessage(const QString &text);
 MessagePtr makeSystemMessage(const QString &text, const QTime &time);
 
-struct MessageParseArgs {
-    bool disablePingSounds = false;
-    bool isReceivedWhisper = false;
-    bool isSentWhisper = false;
-    bool trimSubscriberUsername = false;
-    bool isSubscriptionMessage = false;
-    bool allowIgnore = true;
-    bool isAction = false;
-    QString channelPointRewardId = "";
-};
-
 struct HighlightAlert {
     QUrl customSound;
     bool playSound = false;
@@ -111,11 +103,11 @@ public:
                    const QDateTime &time);
 
     MessageBuilder(LiveUpdatesAddEmoteMessageTag, const QString &platform,
-                   const QString &actor,
-                   const std::vector<QString> &emoteNames);
+                   const QString &actor, const std::vector<QString> &emoteNames,
+                   const QDateTime &time);
     MessageBuilder(LiveUpdatesRemoveEmoteMessageTag, const QString &platform,
-                   const QString &actor,
-                   const std::vector<QString> &emoteNames);
+                   const QString &actor, const std::vector<QString> &emoteNames,
+                   const QDateTime &time);
     MessageBuilder(LiveUpdatesUpdateEmoteMessageTag, const QString &platform,
                    const QString &actor, const QString &emoteName,
                    const QString &oldEmoteName);
@@ -159,7 +151,9 @@ public:
         return pointer;
     }
 
-    void appendOrEmplaceText(const QString &text, MessageColor color);
+    MessageElement *appendOrEmplaceText(
+        const QString &text, MessageColor color,
+        MessageElementFlags messageFlags = MessageElementFlag::Text);
     void appendOrEmplaceSystemTextAndUpdate(const QString &text,
                                             QString &toUpdate);
 
@@ -186,14 +180,12 @@ public:
         const ChannelPointReward &reward, bool isMod, bool isBroadcaster);
 
     /// Make a "CHANNEL_NAME has gone live!" message
-    static MessagePtr makeLiveMessage(const QString &channelName,
-                                      const QString &channelID,
+    static MessagePtr makeLiveMessage(const HelixMinimalUser &channel,
                                       const QString &title,
                                       MessageFlags extraFlags = {});
 
     // Messages in normal chat for channel stuff
-    static MessagePtr makeOfflineSystemMessage(const QString &channelName,
-                                               const QString &channelID);
+    static MessagePtr makeOfflineSystemMessage(const HelixMinimalUser &channel);
     static MessagePtr makeHostingSystemMessage(const QString &channelName,
                                                bool hostOn);
     static MessagePtr makeDeletionMessageFromIRC(
@@ -248,7 +240,8 @@ public:
     static MessagePtrMut makeSystemMessageWithUser(
         const QString &text, const QString &loginName,
         const QString &displayName, const MessageColor &userColor,
-        const QTime &time, const Communi::IrcMessage &ircMessage);
+        const QTime &time, const Communi::IrcMessage &ircMessage,
+        TwitchChannel *channel);
 
     static MessagePtrMut makeSubgiftMessage(Communi::TagsRef tags,
                                             const QTime &time,
@@ -261,6 +254,7 @@ public:
     /// @param count How many times this message has been received already
     static MessagePtrMut makeClearChatMessage(const QDateTime &now,
                                               const QString &actor,
+                                              const QString &channelName,
                                               uint32_t count = 1);
 
     static MessagePtrMut makePinSuccessMessage(QString text, const QString &id);
@@ -279,9 +273,11 @@ private:
     void addEmoji(const EmotePtr &emote);
     void addTextOrEmote(TextState &state, QString string);
 
+    void addTwitchGif(const QString &id, QStringView originalText);
+
     Outcome tryAppendCheermote(TextState &state, const QString &string);
     Outcome tryAppendEmote(TwitchChannel *twitchChannel, const QString &userID,
-                           const EmoteName &name);
+                           EmoteNameView name);
 
     bool isEmpty() const;
     MessageElement &back();
@@ -293,8 +289,14 @@ private:
                        TwitchChannel *twitchChannel,
                        bool trimSubscriberUsername);
     void parseMessageID(Communi::TagsRef tags);
-    /// Parses most of them message flags based on the given tags
-    void parseMessageTags(Communi::TagsRef tags);
+    void appendOrEmplaceTextWithUser(
+        TwitchChannel *channel, const QString &userID,
+        const QString &userLoginName, const QString &userDisplayName,
+        const QString &userColorString, const QString &messageText,
+        MessageElementFlags mentionFlags, MessageElementFlags textFlags);
+    /// Parses most of the message flags based on the given tags
+    void parseMessageTags(Communi::TagsRef tags, TwitchChannel *channel,
+                          bool hasContent);
 
     /// Parses the room-ID this message was received in
     ///
@@ -318,16 +320,19 @@ private:
                      const Channel *channel,
                      const std::shared_ptr<MessageThread> &thread,
                      const MessagePtr &parent);
-    // parseHighlights only updates the visual state of the message, but leaves the playing of alerts and sounds to the triggerHighlights function
-    HighlightAlert parseHighlights(Communi::TagsRef tags,
-                                   const QString &originalMessage,
-                                   const MessageParseArgs &args);
 
+public:
+    // parseHighlights only updates the visual state of the message, but leaves the playing of alerts and sounds to the triggerHighlights function
+    [[nodiscard]] HighlightAlert parseHighlights(Communi::TagsRef tags,
+                                                 const QString &originalMessage,
+                                                 const MessageParseArgs &args);
+
+private:
     void appendChannelName(const Channel *channel);
     void appendUsername(Communi::TagsRef tags, const MessageParseArgs &args);
 
-    void addWords(const QStringList &words,
-                  const std::vector<TwitchEmoteOccurrence> &twitchEmotes,
+    void addWords(QStringView text,
+                  const std::vector<TwitchSpecialOccurrence> &twitchSpecials,
                   TextState &state);
 
     void appendTwitchBadges(Communi::TagsRef tags,

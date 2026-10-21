@@ -128,3 +128,4 @@ aqtinstall.log
 chatty-master/*
 chatty_highlight_matching.txt
 chatty_functions.txt
+.ccache
