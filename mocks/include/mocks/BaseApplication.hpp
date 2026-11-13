@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common/Args.hpp"
+#include "controllers/custombadges/CustomBadgesController.hpp"
 #include "mocks/DisabledStreamerMode.hpp"
 #include "mocks/EmptyApplication.hpp"
 #include "mocks/TwitchUsers.hpp"
@@ -94,12 +95,18 @@ public:
         return nullptr;
     }
 
+    CustomBadgesController *getCustomBadges() override
+    {
+        return &this->customBadges;
+    }
+
     Settings settings;
     Updates updates;
     DisabledStreamerMode streamerMode;
     Theme theme;
     Fonts fonts;
     TwitchUsers twitchUsers;
+    CustomBadgesController customBadges;
 };
 
 }  // namespace chatterino::mock

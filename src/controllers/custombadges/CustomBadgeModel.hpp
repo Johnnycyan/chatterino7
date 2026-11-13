@@ -28,7 +28,9 @@ public:
 
 protected:
     CustomBadge getItemFromRow(std::vector<QStandardItem *> &row,
-                               const CustomBadge &original) override;
+                               const CustomBadge &original,
+                               std::optional<QModelIndex> index,
+                               std::optional<int> role) override;
 
     void getRowFromItem(const CustomBadge &item,
                         std::vector<QStandardItem *> &row) override;

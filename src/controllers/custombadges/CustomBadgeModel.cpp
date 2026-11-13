@@ -14,8 +14,9 @@ CustomBadgeModel::CustomBadgeModel(QObject *parent)
 {
 }
 
-CustomBadge CustomBadgeModel::getItemFromRow(std::vector<QStandardItem *> &row,
-                                             const CustomBadge &original)
+CustomBadge CustomBadgeModel::getItemFromRow(
+    std::vector<QStandardItem *> & /*row*/, const CustomBadge &original,
+    std::optional<QModelIndex> /*index*/, std::optional<int> /*role*/)
 {
     // Our editable model view mostly relies on a custom dialog for editing,
     // so we just return the original if it hasn't changed, or reconstruct
