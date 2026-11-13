@@ -301,11 +301,13 @@ jobs:
       - name: Install dependencies (Windows)
         if: startsWith(matrix.os, 'windows')
         run: |
+          dav1d_compat="$(cygpath -m "$GITHUB_WORKSPACE/.github/conan/dav1d-msvc-compat.h")"
           mkdir build
           cd build
           conan install .. \
               -s build_type=RelWithDebInfo \
               -c tools.cmake.cmaketoolchain:generator="Ninja" \
+              -c "dav1d/*:tools.build:cflags=['/FI$dav1d_compat']" \
               -b missing \
               --output-folder=. \
               -o with_openssl3=True
